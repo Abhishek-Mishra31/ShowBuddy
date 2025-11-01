@@ -52,7 +52,7 @@ const getMovieById = async (req, res) => {
 
 const createMovie = async (req, res) => {
   try {
-    const { title, year, genre, ratings } = req.body;
+    const { title, year, genre, ratings , posterImage } = req.body;
     
     const existingMovie = await Movie.findOne({ title, year });
     if (existingMovie) {
@@ -66,7 +66,8 @@ const createMovie = async (req, res) => {
       title,
       year,
       genre,
-      ratings
+      ratings,
+      posterImage
     });
     
     res.status(201).json({
@@ -95,7 +96,7 @@ const createMovie = async (req, res) => {
 
 const updateMovie = async (req, res) => {
   try {
-    const { title, year, genre, ratings } = req.body;
+    const { title, year, genre, ratings, posterImage } = req.body;
     
     let movie = await Movie.findById(req.params.id);
     if (!movie) {
@@ -121,7 +122,7 @@ const updateMovie = async (req, res) => {
     
     movie = await Movie.findByIdAndUpdate(
       req.params.id,
-      { title, year, genre, ratings },
+      { title, year, genre, ratings, posterImage },
       {
         new: true,
         runValidators: true

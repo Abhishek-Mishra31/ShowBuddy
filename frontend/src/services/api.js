@@ -56,6 +56,43 @@ api.interceptors.response.use(
   }
 );
 
+// API URL
+const API_URL = 'http://localhost:1000/api';
+
+// Auth API functions
+export const authAPI = {
+  // Register a new user
+  register: async (userData) => {
+    try {
+      const response = await axios.post(`${API_URL}/users/register`, userData);
+      return response.data;
+    } catch (error) {
+      console.error('Error registering user:', error);
+      throw error;
+    }
+  },
+
+  login: async (credentials) => {
+    try {
+      const response = await axios.post(`${API_URL}/users/login`, credentials);
+      return response.data;
+    } catch (error) {
+      console.error('Error logging in:', error);
+      throw error;
+    }
+  },
+
+  getCurrentUser: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/users/me`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+      throw error;
+    }
+  }
+};
+
 // Movie API functions
 export const movieAPI = {
   // Get all movies

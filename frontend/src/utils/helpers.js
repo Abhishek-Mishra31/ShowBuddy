@@ -1,6 +1,19 @@
-import { APP_CONFIG } from './constants';
+import { APP_CONFIG, API_ENDPOINTS } from './constants';
 
 // Format date to readable string
+// Build full URL for poster image if backend returns relative path
+export const getPosterUrl = (posterImage) => {
+  if (!posterImage) return '';
+  // If already absolute (http/https or data URI) just return as-is
+  if (/^(https?:)?\/\//i.test(posterImage) || posterImage.startsWith('data:')) {
+    return posterImage;
+  }
+  // Build absolute URL using backend host (strip trailing /api from BASE_URL)
+  const base = API_ENDPOINTS.BASE_URL.replace(/\/api$/, '');
+  const cleaned = posterImage.startsWith('/') ? posterImage.substring(1) : posterImage;
+  return `${base}/${cleaned}`;
+};
+
 export const formatDate = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useMovies } from '../context/MovieContext';
+import { getPosterUrl } from '../utils/helpers';
 import { useNavigate } from 'react-router-dom';
 import { getStarRating } from '../utils/helpers';
 
@@ -7,11 +8,10 @@ const HomePage = () => {
   const { movies } = useMovies();
   const navigate = useNavigate();
 
-  // Get featured movies (first 6 movies)
-  const featuredMovies = movies.slice(0, 6);
-  
-  // Get hero movie (first movie)
+  // Hero movie is the first fetched movie
   const heroMovie = movies[0];
+  // Show the rest of the movies (exclude hero)
+  const featuredMovies = movies.slice(1);
 
   const handleBookNow = (movieId) => {
     navigate(`/movie/${movieId}`);
@@ -26,7 +26,14 @@ const HomePage = () => {
       {/* Hero Section */}
       {heroMovie && (
         <section className="hero-section">
-          <div className="hero-background">
+          <div
+            className="hero-background bg-cover bg-center"
+            style={{
+              backgroundImage: heroMovie.posterImage
+                ? `url(${getPosterUrl(heroMovie.posterImage)})`
+                : 'none',
+            }}
+          >
             <div className="hero-overlay"></div>
             <div className="hero-content">
               <div className="hero-text">
@@ -72,7 +79,18 @@ const HomePage = () => {
             {featuredMovies.map((movie) => (
               <div key={movie._id} className="movie-card-home">
                 <div className="movie-poster">
-                  <div className="poster-placeholder">
+                  {movie.posterImage ? (
+                    <img
+                      src={getPosterUrl(movie.posterImage)}
+                      alt={`${movie.title} poster`}
+                      className="poster-image w-full h-64 object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div className={`poster-placeholder ${movie.posterImage ? 'hidden' : ''}`}>
                     <span className="movie-icon">🎬</span>
                   </div>
                   <div className="movie-overlay">

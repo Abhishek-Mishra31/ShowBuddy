@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useMovies } from '../context/MovieContext';
-import { formatDate, getRatingColor, getGenreBadgeColor } from '../utils/helpers';
+import { formatDate, getRatingColor, getGenreBadgeColor, getPosterUrl } from '../utils/helpers';
 
 const MovieCard = ({ movie, onEdit }) => {
   const { deleteMovie } = useMovies();
@@ -77,22 +77,39 @@ const MovieCard = ({ movie, onEdit }) => {
 
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100 group">
-      {/* Movie Poster Placeholder */}
-      <div className="relative h-48 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center">
-        <div className="text-white text-center">
-          <svg
-            className="w-16 h-16 mx-auto mb-2 opacity-80"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              fillRule="evenodd"
-              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v6H4V5h1zm0 8H4v2h1v-2z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <p className="text-sm font-medium opacity-90">Movie Poster</p>
+      {/* Movie Poster */}
+      <div className="relative h-64 overflow-hidden">
+        {movie.posterImage ? (
+          <img
+            src={getPosterUrl(movie.posterImage)}
+            alt={`${movie.title} poster`}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
+          />
+        ) : null}
+        
+        {/* Fallback placeholder */}
+        <div 
+          className={`absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center text-white text-center ${movie.posterImage ? 'hidden' : 'flex'}`}
+        >
+          <div>
+            <svg
+              className="w-16 h-16 mx-auto mb-2 opacity-80"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v6H4V5h1zm0 8H4v2h1v-2z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <p className="text-sm font-medium opacity-90">No Poster</p>
+          </div>
         </div>
         
         {/* Action buttons overlay */}

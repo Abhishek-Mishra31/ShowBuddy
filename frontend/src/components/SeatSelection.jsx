@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import paymentAPI from '../services/paymentAPI';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const SeatSelection = () => {
@@ -78,7 +79,7 @@ const SeatSelection = () => {
     }, 0);
   };
 
-  const handleProceedToPayment = () => {
+  const handleProceedToPayment = async () => {
     if (selectedSeats.length === 0) {
       alert('Please select at least one seat');
       return;
@@ -100,7 +101,34 @@ const SeatSelection = () => {
       numberOfSeats: selectedSeats.length
     };
 
-    navigate('/payment', { state: paymentData });
+    try {
+      // 1. create order on backend
+      const orderRes = await paymentAPI.createOrder(paymentData.totalAmount, { bookingId: bookingData.movieId });
+      if (!orderRes.success) throw new Error('Order creation failed');
+
+      const options = {
+        key: orderRes.keyId,
+        amount: orderRes.amount,
+        currency: orderRes.currency,
+        name: bookingData.movieTitle,
+        description: `${bookingData.theater.name} | ${bookingData.date} ${bookingData.time}`,
+        order_id: orderRes.orderId,
+        handler: async function (response) {
+          const verify = await paymentAPI.verifySignature(response);
+          if (verify.success) {
+            navigate('/confirmation', { state: { ...paymentData, payment: response } });
+          } else {
+            alert('Payment verification failed');
+          }
+        },
+        theme: { color: '#ff6b6b' },
+      };
+      const rz = new window.Razorpay(options);
+      rz.open();
+    } catch (err) {
+      console.error(err);
+      alert('Payment initiation failed');
+    }
   };
 
   if (!bookingData) {

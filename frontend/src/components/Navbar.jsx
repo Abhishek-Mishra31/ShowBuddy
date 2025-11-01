@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import LoginPopup from './LoginPopup';
+import SignupPopup from './SignupPopup';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
+  
+  const closeLogin = () => setIsLoginOpen(false);
+  const closeSignup = () => setIsSignupOpen(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -55,28 +62,13 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Search Bar */}
-        <div className="nav-search">
-          <input 
-            type="text" 
-            placeholder="Search movies..." 
-            className="search-input"
-            onKeyPress={(e) => {
-              if (e.key === 'Enter' && e.target.value.trim()) {
-                navigate(`/movies?search=${encodeURIComponent(e.target.value.trim())}`);
-                e.target.value = '';
-              }
-            }}
-          />
-          <span className="search-icon">🔍</span>
-        </div>
 
         {/* User Actions */}
         <div className="nav-actions">
-          <button className="nav-btn login-btn">
+          <button className="nav-btn login-btn" onClick={() => setIsLoginOpen(true)}>
             Sign In
           </button>
-          <button className="nav-btn signup-btn">
+          <button className="nav-btn signup-btn" onClick={() => setIsSignupOpen(true)}>
             Sign Up
           </button>
         </div>
@@ -88,6 +80,18 @@ const Navbar = () => {
           <span className="bar"></span>
         </div>
       </div>
+
+      {/* Login Popup */}
+      <LoginPopup 
+        isOpen={isLoginOpen} 
+        onClose={closeLogin} 
+      />
+
+      {/* Signup Popup */}
+      <SignupPopup 
+        isOpen={isSignupOpen} 
+        onClose={closeSignup} 
+      />
     </nav>
   );
 };

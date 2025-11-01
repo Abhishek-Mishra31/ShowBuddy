@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMovies } from '../context/MovieContext';
-import { getStarRating } from '../utils/helpers';
+import { getStarRating, getPosterUrl } from '../utils/helpers';
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -30,10 +30,10 @@ const MovieDetails = () => {
       date.setDate(date.getDate() + i);
       dates.push({
         date: date.toISOString().split('T')[0],
-        display: date.toLocaleDateString('en-US', { 
-          weekday: 'short', 
-          month: 'short', 
-          day: 'numeric' 
+        display: date.toLocaleDateString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric'
         })
       });
     }
@@ -45,7 +45,7 @@ const MovieDetails = () => {
   useEffect(() => {
     const foundMovie = movies.find(m => m._id === id);
     setMovie(foundMovie);
-    
+
     // Set default selections
     if (dates.length > 0) setSelectedDate(dates[0].date);
     if (showtimes.length > 0) setSelectedTime(showtimes[0]);
@@ -87,9 +87,17 @@ const MovieDetails = () => {
           <div className="movie-hero-overlay"></div>
           <div className="movie-hero-content">
             <div className="movie-poster-large">
-              <div className="poster-placeholder-large">
-                <span className="movie-icon-large">🎬</span>
-              </div>
+              {movie.posterImage ? (
+                <img
+                  src={getPosterUrl(movie.posterImage)}
+                  alt={`${movie.title} poster`}
+                  className="poster-image-large w-40 sm:w-52 md:w-60 lg:w-72 xl:w-80 h-auto object-cover"
+                />
+              ) : (
+                <div className="poster-placeholder-large">
+                  <span className="movie-icon-large">🎬</span>
+                </div>
+              )}
             </div>
             <div className="movie-info-large">
               <h1 className="movie-title-large">{movie.title}</h1>
@@ -107,8 +115,8 @@ const MovieDetails = () => {
                 </div>
               </div>
               <p className="movie-description">
-                Experience the ultimate cinematic journey with {movie.title}. 
-                This {movie.genre.toLowerCase()} masterpiece from {movie.year} delivers 
+                Experience the ultimate cinematic journey with {movie.title}.
+                This {movie.genre.toLowerCase()} masterpiece from {movie.year} delivers
                 an unforgettable story that will keep you on the edge of your seat.
               </p>
             </div>
@@ -120,7 +128,7 @@ const MovieDetails = () => {
       <section className="booking-section">
         <div className="container">
           <h2 className="booking-title">Book Your Tickets</h2>
-          
+
           {/* Date Selection */}
           <div className="booking-step">
             <h3 className="step-title">Select Date</h3>
@@ -169,14 +177,22 @@ const MovieDetails = () => {
               ))}
             </div>
           </div>
-
           {/* Booking Summary */}
           <div className="booking-summary">
             <h3 className="summary-title">Booking Summary</h3>
             <div className="summary-details">
-              <div className="summary-item">
-                <span className="summary-label">Movie:</span>
-                <span className="summary-value">{movie.title}</span>
+              <div className="summary-item flex items-center space-x-3">
+                {movie.posterImage ? (
+                  <img
+                    src={getPosterUrl(movie.posterImage)}
+                    alt="poster"
+                    className="object-cover rounded w-10 h-auto sm:w-12 md:w-16 lg:w-20 flex-shrink-0"
+                  />
+                ) : null}
+                <div>
+                  <span className="summary-label block">Movie:</span>
+                  <span className="summary-value">{movie.title}</span>
+                </div>
               </div>
               <div className="summary-item">
                 <span className="summary-label">Date:</span>

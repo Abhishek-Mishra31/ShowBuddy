@@ -33,6 +33,11 @@ const movieSchema = new mongoose.Schema({
       },
       message: 'Rating must be a number between 0 and 10'
     }
+  },
+  posterImage: {
+    type: String,
+    required: [true, 'Movie poster image is required'],
+    trim: true
   }
 }, {
   timestamps: true

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { MovieProvider } from './context/MovieContext';
+import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import MovieList from './components/MovieList';
@@ -14,11 +15,12 @@ import './App.css';
 
 function App() {
   return (
-    <MovieProvider>
-      <Router>
-        <div className="App">
-          <Navbar />
-          <Routes>
+    <AuthProvider>
+      <MovieProvider>
+        <Router>
+          <div className="App">
+            <Navbar />
+            <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/movies" element={<MovieList />} />
             <Route path="/movie/:id" element={<MovieDetails />} />
@@ -28,9 +30,10 @@ function App() {
             <Route path="/my-bookings" element={<MyBookings />} />
             <Route path="/admin" element={<Admin />} />
           </Routes>
-        </div>
-      </Router>
-    </MovieProvider>
+          </div>
+        </Router>
+      </MovieProvider>
+    </AuthProvider>
   );
 }
 
