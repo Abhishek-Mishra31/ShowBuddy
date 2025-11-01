@@ -2,7 +2,6 @@ import React from 'react';
 import { useMovies } from '../context/MovieContext';
 import { useNavigate } from 'react-router-dom';
 import { getStarRating } from '../utils/helpers';
-import './HomePage.css';
 
 const HomePage = () => {
   const { movies } = useMovies();

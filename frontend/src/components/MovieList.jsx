@@ -4,7 +4,6 @@ import MovieCard from './MovieCard';
 import MovieForm from './MovieForm';
 import { MOVIE_GENRES, SORT_OPTIONS } from '../utils/constants';
 import { debounce } from '../utils/helpers';
-import './MovieList.css';
 
 const MovieList = () => {
   const {

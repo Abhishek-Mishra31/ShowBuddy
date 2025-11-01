@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserBookings, cancelBooking } from '../services/bookingApi';
-import './MyBookings.css';
 
 const MyBookings = () => {
   const navigate = useNavigate();

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useMovies } from '../context/MovieContext';
 import { getBookingStats } from '../services/bookingApi';
-import './Admin.css';
 
 const Admin = () => {
   const { movies, loading: moviesLoading, createMovie, updateMovie, deleteMovie } = useMovies();

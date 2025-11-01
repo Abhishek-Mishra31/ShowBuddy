@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createBooking } from '../services/bookingApi';
-import './Payment.css';
 
 const Payment = () => {
   const location = useLocation();
